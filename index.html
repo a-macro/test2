@@ -64,82 +64,87 @@
         let block3Deg = 0;
 
         window.addEventListener("wheel", (e) => {
-            if(e.deltaY > 0 && count >= -40) {
+            if(e.deltaY > 0 && count >= -38) {
                 count--;
                 if(check == false) {
                     main.style.backgroundPositionY = count*60 + "px";
                 }
-                if(count < -7 && count > -11) {
-                    block1.style.transform = `translateY(${60 - 45/4*blockTransl}vw)`;
-                    block2.style.transform = `translateY(${65 - 50/4*blockTransl}vw)`;
-                    block3.style.transform = `translateY(${70 - 55/4*blockTransl}vw)`;
-                    blockTransl++;
-                } else if(count == -11) {
-                    block1.style.transform = `translateY(25vw)`;
-                    block2.style.transform = `translateY(25vw)`;
-                    block3.style.transform = `translateY(25vw)`;
-                    blockTransl = 0;
-                } else if(count < -11 && count > -17) {
-                    blockTransl += 5;
-                    block1.style.transform = `translateY(${25 - blockTransl}vw)`;
-                    block2.style.transform = `translateY(${25 - blockTransl}vw)`;
-                    block3.style.transform = `translateY(${25 - blockTransl}vw)`;
-                } else if(count <= -17 && count > -23) {
+                if(count < -3 && count > -8) {
+                    block1.style.transform = `translateY(${60 - 45/5*blockTransl}vw)`;
+                    block2.style.transform = `translateY(${65 - 50/5*blockTransl}vw)`;
+                    block3.style.transform = `translateY(${70 - 55/5*blockTransl}vw)`;
+                    blockTransl++;                                                                  //1 - 5 -  blockTransl
+                } else if(count == -8) {
+                    block1.style.transform = `translateY(20vw)`;
+                    block2.style.transform = `translateY(20vw)`;
+                    block3.style.transform = `translateY(20vw)`;
+                } else if(count < -8 && count > -13) {
+                    block1.style.transform = `translateY(${20 - blockTransl}vw)`;
+                    block2.style.transform = `translateY(${20 - blockTransl}vw)`;
+                    block3.style.transform = `translateY(${20 - blockTransl}vw)`;
+                    blockTransl += 5;                                                               //5 - 25 -  blockTransl
+                } else if(count == -13) {
                     check = true;
+                } else if(count < -13 && count > -20) {
                     block1Deg++;
                     rotateBlock(block1, countRotate*block1Deg);
-                } else if(count <= -23 && count > -29) {
+                } else if(count <= -20 && count > -26) {
                     block2Deg++;
                     rotateBlock(block2, block2Deg*countRotate);
-                } else if(count <= -29 && count > -35) {
+                } else if(count <= -26 && count > -32) {
                     block3Deg++;
                     rotateBlock(block3, block3Deg*countRotate);
-                } else if(count < -35 && count >= -40) {
+                } else if(count == -32) {
+                    blockTransl = 0;                                                                 //0 -  blockTransl       
+                } else if(count < -32 && count > -38) {
                     check = false;
-                    block1.style.transform = `translateY(${-blockTransl - 5}vw) rotate(90deg)`;
-                    block2.style.transform = `translateY(${-blockTransl - 5}vw) rotate(90deg)`;
-                    block3.style.transform = `translateY(${-blockTransl - 5}vw) rotate(90deg)`;
-                    if(blockTransl < 60) {
-                        blockTransl+= 15;
-                    }
+                    blockTransl -= 10;
+                    block1.style.transform = `translateY(${blockTransl}vw) rotate(90deg)`;
+                    block2.style.transform = `translateY(${blockTransl}vw) rotate(90deg)`;
+                    block3.style.transform = `translateY(${blockTransl}vw) rotate(90deg)`;         
+                    console.log(blockTransl);
                 }
-            } else if (e.deltaY < 0) {
+            } else if (e.deltaY < 0 && count <= 0) {
                 count++;
                 if(check == false) {
                     main.style.backgroundPositionY = count*60 + "px";
                 }
-                if(count >= -40 && count <= -35) {
+                if(count < -32 && count >= -38) {
                     check = false;
-                    block1.style.transform = `translateY(${-blockTransl - 5}vw) rotate(90deg)`;
-                    block2.style.transform = `translateY(${-blockTransl - 5}vw) rotate(90deg)`;
-                    block3.style.transform = `translateY(${-blockTransl - 5}vw) rotate(90deg)`;
-                    blockTransl-= 15;
-                } else if(count >= -34 && count <= -29) {
+                    block1.style.transform = `translateY(${blockTransl}vw) rotate(90deg)`;
+                    block2.style.transform = `translateY(${blockTransl}vw) rotate(90deg)`;
+                    block3.style.transform = `translateY(${blockTransl}vw) rotate(90deg)`;
+                    blockTransl += 10;
+
+                    console.log(blockTransl);
+                } else if(count == -32) {
+                    blockTransl = 25;
+                } else if(count <= -26 && count > -32) {
                     check = true;
                     block3Deg--;
                     rotateBlock(block3, block3Deg*countRotate);
-                } else if(count >= -29 && count < -22) {
+                } else if(count <= -20 && count > -26) {
                     block2Deg--;
                     rotateBlock(block2, block2Deg*countRotate);
-                } else if(count >= -22 && count < -16) {
+                } else if(count < -13 && count > -20) {
                     block1Deg--;
                     rotateBlock(block1, block1Deg*countRotate);
-                } else if(count < 0 && count > -17) {
-                    block1.style.transform = `translateY(${blockTransl + 20}vw)`;
-                    block2.style.transform = `translateY(${blockTransl + 20}vw)`;
-                    block3.style.transform = `translateY(${blockTransl + 20}vw)`;
-                    blockTransl += 10;
-                } else if(count == 0) {
-                    block1.style.transform = `translateY(60vw)`;
-                    block2.style.transform = `translateY(65vw)`;
-                    block3.style.transform = `translateY(70vw)`;
-                    count = 0;
-                    blockTransl = 1;
+                } else if(count == -13) {
                     check = false;
-                    countRotate = 15;
-                    block1Deg = 0;
-                    block2Deg = 0;
-                    block3Deg = 0;
+                } else if(count < -8 && count > -13) {
+                    blockTransl -= 5;
+                    block1.style.transform = `translateY(${20 - blockTransl}vw)`;
+                    block2.style.transform = `translateY(${20 - blockTransl}vw)`;
+                    block3.style.transform = `translateY(${20 - blockTransl}vw)`;
+                } else if(count == -8) {
+                    block1.style.transform = `translateY(20vw)`;
+                    block2.style.transform = `translateY(20vw)`;
+                    block3.style.transform = `translateY(20vw)`;
+                } if(count < -3 && count > -8) {
+                    blockTransl--;                                                                 
+                    block1.style.transform = `translateY(${60 - 45/5*blockTransl}vw)`;
+                    block2.style.transform = `translateY(${65 - 50/5*blockTransl}vw)`;
+                    block3.style.transform = `translateY(${70 - 55/5*blockTransl}vw)`;
                 }
             }
         });

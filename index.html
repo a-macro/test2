@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        .main {
+            min-height: 100vh;
+            width: 100%;
+            background-color: black;
+            background-image: url("https://s1.hostingkartinok.com/uploads/images/2021/10/244a65611378a3c42d9beb9f57bfbfb1.png");
+            display: flex;
+            justify-content: center;
+            transition: background 2s ease-out 0s;
+        }
+       .wrapper {
+            width: 65vw;
+            display: flex;
+            justify-content: space-evenly;
+            overflow-y: hidden;
+        }
+        .block {
+            width: 15vw;
+            height: 15vw;
+            align-self: center;
+            background: rgba(255, 255, 255, 0.5);
+            transform: translateY(60vw);
+            transition: transform 0.8s ease-out 0s, rotate 0.1s linear 0s;
+        }
+        .block2 {
+            transform: translateY(65vw);
+        }
+        .block3 {
+            transform: translateY(70vw);
+        }
+    </style>
+</head>
+<body>
+    <div class = "main" id = "main">
+        <div class = "wrapper">
+            <div class = "block block1"></div>
+            <div class = "block block2"></div>
+            <div class = "block block3"></div>
+        </div>
+    </div>
+    <script>
+        const main = document.getElementById("main");
+        const block1 = document.getElementsByClassName("block")[0];
+        const block2 = document.getElementsByClassName("block")[1];
+        const block3 = document.getElementsByClassName("block")[2];
+
+        let count = 0;
+        let blockTransl = 1;
+        let check = false;
+        let countRotate = 15;
+        let block1Deg = 0;
+        let block2Deg = 0;
+        let block3Deg = 0;
+
+        window.addEventListener("wheel", (e) => {
+            if(e.deltaY > 0 && count >= -40) {
+                count--;
+                if(check == false) {
+                    main.style.backgroundPositionY = count*60 + "px";
+                }
+                if(count < -7 && count > -11) {
+                    block1.style.transform = `translateY(${60 - 45/4*blockTransl}vw)`;
+                    block2.style.transform = `translateY(${65 - 50/4*blockTransl}vw)`;
+                    block3.style.transform = `translateY(${70 - 55/4*blockTransl}vw)`;
+                    blockTransl++;
+                } else if(count == -11) {
+                    block1.style.transform = `translateY(25vw)`;
+                    block2.style.transform = `translateY(25vw)`;
+                    block3.style.transform = `translateY(25vw)`;
+                    blockTransl = 0;
+                } else if(count < -11 && count > -17) {
+                    blockTransl += 5;
+                    block1.style.transform = `translateY(${25 - blockTransl}vw)`;
+                    block2.style.transform = `translateY(${25 - blockTransl}vw)`;
+                    block3.style.transform = `translateY(${25 - blockTransl}vw)`;
+                } else if(count <= -17 && count > -23) {
+                    check = true;
+                    block1Deg++;
+                    rotateBlock(block1, countRotate*block1Deg);
+                } else if(count <= -23 && count > -29) {
+                    block2Deg++;
+                    rotateBlock(block2, block2Deg*countRotate);
+                } else if(count <= -29 && count > -35) {
+                    block3Deg++;
+                    rotateBlock(block3, block3Deg*countRotate);
+                } else if(count < -35 && count >= -40) {
+                    check = false;
+                    block1.style.transform = `translateY(${-blockTransl - 5}vw) rotate(90deg)`;
+                    block2.style.transform = `translateY(${-blockTransl - 5}vw) rotate(90deg)`;
+                    block3.style.transform = `translateY(${-blockTransl - 5}vw) rotate(90deg)`;
+                    if(blockTransl < 60) {
+                        blockTransl+= 15;
+                    }
+                }
+            } else if (e.deltaY < 0) {
+                count++;
+                if(check == false) {
+                    main.style.backgroundPositionY = count*60 + "px";
+                }
+                if(count >= -40 && count <= -35) {
+                    check = false;
+                    block1.style.transform = `translateY(${-blockTransl - 5}vw) rotate(90deg)`;
+                    block2.style.transform = `translateY(${-blockTransl - 5}vw) rotate(90deg)`;
+                    block3.style.transform = `translateY(${-blockTransl - 5}vw) rotate(90deg)`;
+                    blockTransl-= 15;
+                } else if(count >= -34 && count <= -29) {
+                    check = true;
+                    block3Deg--;
+                    rotateBlock(block3, block3Deg*countRotate);
+                } else if(count >= -29 && count < -22) {
+                    block2Deg--;
+                    rotateBlock(block2, block2Deg*countRotate);
+                } else if(count >= -22 && count < -16) {
+                    block1Deg--;
+                    rotateBlock(block1, block1Deg*countRotate);
+                } else if(count < 0 && count > -17) {
+                    block1.style.transform = `translateY(${blockTransl + 20}vw)`;
+                    block2.style.transform = `translateY(${blockTransl + 20}vw)`;
+                    block3.style.transform = `translateY(${blockTransl + 20}vw)`;
+                    blockTransl += 10;
+                } else if(count == 0) {
+                    block1.style.transform = `translateY(60vw)`;
+                    block2.style.transform = `translateY(65vw)`;
+                    block3.style.transform = `translateY(70vw)`;
+                    count = 0;
+                    blockTransl = 1;
+                    check = false;
+                    countRotate = 15;
+                    block1Deg = 0;
+                    block2Deg = 0;
+                    block3Deg = 0;
+                }
+            }
+        });
+        function rotateBlock(block, _count) {
+            block.style.transform = `translateY(0vw) rotate(${_count}deg)`;
+        }
+    </script>
+</body>
+</html>

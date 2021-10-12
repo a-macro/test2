@@ -17,7 +17,7 @@
             background-image: url("https://s1.hostingkartinok.com/uploads/images/2021/10/244a65611378a3c42d9beb9f57bfbfb1.png");
             display: flex;
             justify-content: center;
-            transition: background 2s ease-out 0s;
+            transition: background 1.5s ease-out 0s;
         }
        .wrapper {
             width: 65vw;
@@ -30,14 +30,14 @@
             height: 15vw;
             align-self: center;
             background: rgba(255, 255, 255, 0.5);
-            transform: translateY(60vw);
-            transition: transform 0.8s ease-out 0s, rotate 0.1s linear 0s;
+            transform: translateY(60vh);
+            transition: transform 0.5s ease-out 0s, rotate 0.3s ease-out 0s;
         }
         .block2 {
-            transform: translateY(65vw);
+            transform: translateY(65vh);
         }
         .block3 {
-            transform: translateY(70vw);
+            transform: translateY(70vh);
         }
     </style>
 </head>
@@ -50,107 +50,162 @@
         </div>
     </div>
     <script>
-        const main = document.getElementById("main");
-        const block1 = document.getElementsByClassName("block")[0];
-        const block2 = document.getElementsByClassName("block")[1];
-        const block3 = document.getElementsByClassName("block")[2];
+        class Blocks {
 
-        let count = 0;
-        let blockTransl = 1;
-        let check = false;
-        let countRotate = 15;
-        let block1Deg = 0;
-        let block2Deg = 0;
-        let block3Deg = 0;
+            constructor(parent) {
+                this.parent = parent;
+                this.block1 = this.parent.getElementsByClassName("block")[0];
+                this.block2 = this.parent.getElementsByClassName("block")[1];
+                this.block3 = this.parent.getElementsByClassName("block")[2];
+                this.addEvents();
+                this.progress1 = 60;
+                this.progress2 = 65;
+                this.progress3 = 70;
+                this.progrRotate1 = 0;
+                this.progrRotate2 = 0;
+                this.progrRotate3 = 0;
+                this.bgPosition = 0;
+                this.check = false;
+                this.count = 0;
+                this.rotatedAll = false;
+                this.touchSt = 0;
+                this.touchEnd = 0;
+                this.touchMove = 0;
+            }
 
-        window.addEventListener("wheel", (e) => {
-            if(e.deltaY > 0 && count >= -38) {
-                count--;
-                if(check == false) {
-                    main.style.backgroundPositionY = count*60 + "px";
-                }
-                if(count < -3 && count > -8) {
-                    block1.style.transform = `translateY(${60 - 45/5*blockTransl}vw)`;
-                    block2.style.transform = `translateY(${65 - 50/5*blockTransl}vw)`;
-                    block3.style.transform = `translateY(${70 - 55/5*blockTransl}vw)`;
-                    blockTransl++;                                                                  //1 - 5 -  blockTransl
-                } else if(count == -8) {
-                    block1.style.transform = `translateY(20vw)`;
-                    block2.style.transform = `translateY(20vw)`;
-                    block3.style.transform = `translateY(20vw)`;
-                } else if(count < -8 && count > -13) {
-                    block1.style.transform = `translateY(${20 - blockTransl}vw)`;
-                    block2.style.transform = `translateY(${20 - blockTransl}vw)`;
-                    block3.style.transform = `translateY(${20 - blockTransl}vw)`;
-                    blockTransl += 5;                                                               //5 - 25 -  blockTransl
-                } else if(count == -13) {
-                    check = true;
-                } else if(count < -13 && count > -20) {
-                    block1Deg++;
-                    rotateBlock(block1, countRotate*block1Deg);
-                } else if(count <= -20 && count > -26) {
-                    block2Deg++;
-                    rotateBlock(block2, block2Deg*countRotate);
-                } else if(count <= -26 && count > -32) {
-                    block3Deg++;
-                    rotateBlock(block3, block3Deg*countRotate);
-                } else if(count == -32) {
-                    blockTransl = 0;                                                                 //0 -  blockTransl       
-                } else if(count < -32 && count > -38) {
-                    check = false;
-                    blockTransl -= 10;
-                    block1.style.transform = `translateY(${blockTransl}vw) rotate(90deg)`;
-                    block2.style.transform = `translateY(${blockTransl}vw) rotate(90deg)`;
-                    block3.style.transform = `translateY(${blockTransl}vw) rotate(90deg)`;         
-                    console.log(blockTransl);
-                }
-            } else if (e.deltaY < 0 && count <= 0) {
-                count++;
-                if(check == false) {
-                    main.style.backgroundPositionY = count*60 + "px";
-                }
-                if(count < -32 && count >= -38) {
-                    check = false;
-                    block1.style.transform = `translateY(${blockTransl}vw) rotate(90deg)`;
-                    block2.style.transform = `translateY(${blockTransl}vw) rotate(90deg)`;
-                    block3.style.transform = `translateY(${blockTransl}vw) rotate(90deg)`;
-                    blockTransl += 10;
+            addEvents() {
+                this.parent.addEventListener("wheel", (e) => {
+                    if(this.check == false) {
+                        this.scrollBG(e.deltaY);
+                    }
+                    this.transfBlocks(e.deltaY);
+                });
+                this.parent.addEventListener("scroll", (e) => {
+                    if(this.check == false) {
+                        this.scrollBG(e.deltaY);
+                    }
+                    this.transfBlocks(e.deltaY);
+                });
+            }
+            transfBlocks(scroll) {
+                if(scroll > 0) {
+                    if(this.progress1 > 24) {
+                        this.progress1 -= 9;
+                        this.progress2 -= 10;
+                        this.progress3 -= 11;
 
-                    console.log(blockTransl);
-                } else if(count == -32) {
-                    blockTransl = 25;
-                } else if(count <= -26 && count > -32) {
-                    check = true;
-                    block3Deg--;
-                    rotateBlock(block3, block3Deg*countRotate);
-                } else if(count <= -20 && count > -26) {
-                    block2Deg--;
-                    rotateBlock(block2, block2Deg*countRotate);
-                } else if(count < -13 && count > -20) {
-                    block1Deg--;
-                    rotateBlock(block1, block1Deg*countRotate);
-                } else if(count == -13) {
-                    check = false;
-                } else if(count < -8 && count > -13) {
-                    blockTransl -= 5;
-                    block1.style.transform = `translateY(${20 - blockTransl}vw)`;
-                    block2.style.transform = `translateY(${20 - blockTransl}vw)`;
-                    block3.style.transform = `translateY(${20 - blockTransl}vw)`;
-                } else if(count == -8) {
-                    block1.style.transform = `translateY(20vw)`;
-                    block2.style.transform = `translateY(20vw)`;
-                    block3.style.transform = `translateY(20vw)`;
-                } if(count < -3 && count > -8) {
-                    blockTransl--;                                                                 
-                    block1.style.transform = `translateY(${60 - 45/5*blockTransl}vw)`;
-                    block2.style.transform = `translateY(${65 - 50/5*blockTransl}vw)`;
-                    block3.style.transform = `translateY(${70 - 55/5*blockTransl}vw)`;
+                        this.block1.style.transform = `translateY(${this.progress1}vh)`;
+                        this.block2.style.transform = `translateY(${this.progress2}vh)`;
+                        this.block3.style.transform = `translateY(${this.progress3}vh)`;
+                    } else if(this.progress1 == 24) {
+                        this.progress1 = 20;
+                        this.progress2 = 20;
+                        this.progress3 = 20;
+
+                        this.block1.style.transform = `translateY(20vh)`;
+                        this.block2.style.transform = `translateY(20vh)`;
+                        this.block3.style.transform = `translateY(20vh)`;
+                    } else if(this.progress1 <= 20 && this.progress1 > 0) {
+                        this.progress1 -= 5;
+                        this.progress2 -= 5;
+                        this.progress3 -= 5;
+
+                        this.block1.style.transform = `translateY(${this.progress1}vh)`;
+                        this.block2.style.transform = `translateY(${this.progress2}vh)`;
+                        this.block3.style.transform = `translateY(${this.progress3}vh)`;
+                    } else if(this.progress1 == 0 && this.progrRotate1 < 90) {
+                        this.check = true;
+                        this.rotateBlock(1, "forward");
+                    } else if(this.progrRotate1 == 90 && this.progrRotate2 < 90) {
+                        this.rotateBlock(2, "forward");
+                    } else if(this.progrRotate1 == 90 && this.progrRotate1 == 90 && this.progrRotate3 < 90) {
+                        this.rotateBlock(3, "forward");
+                        this.rotatedAll = true;
+                    } else if(this.rotatedAll = true && this.progress1 > -60) {
+                        this.check = false;
+                        this.progress1 -= 10;
+                        this.progress2 -= 10;
+                        this.progress3 -= 10;
+
+                        this.block1.style.transform = `translateY(${this.progress1}vh) rotate(90deg)`;
+                        this.block2.style.transform = `translateY(${this.progress2}vh) rotate(90deg)`;
+                        this.block3.style.transform = `translateY(${this.progress3}vh) rotate(90deg)`;
+
+                    } else {
+                        this.check = true;
+                        this.rotatedAll = false;
+                    }
+                } else if(scroll < 0) {
+                    if(this.progress1 <= -10) {
+                        this.check = false;
+                        this.progress1 += 10;
+                        this.progress2 += 10;
+                        this.progress3 += 10;
+
+                        this.block1.style.transform = `translateY(${this.progress1}vh) rotate(90deg)`;
+                        this.block2.style.transform = `translateY(${this.progress2}vh) rotate(90deg)`;
+                        this.block3.style.transform = `translateY(${this.progress3}vh) rotate(90deg)`;
+
+                    } else if(this.progrRotate1 == 90 && this.progrRotate2 == 90 && this.progrRotate3 >= 15) {
+                        this.check = true;
+                        this.rotateBlock(3, "back");
+                    } else if(this.progrRotate1 == 90 && this.progrRotate2 >= 15 && this.progrRotate3 == 0) {
+                        this.rotateBlock(2, "back");
+                    } else if(this.progrRotate1 >= 15 && this.progrRotate2 == 0 && this.progrRotate3 == 0) {
+                        this.rotateBlock(1, "back");
+                        this.rotatedAll = true;
+                    } else if(this.progress1 < 20) {
+                        this.progress1 += 5;
+                        this.progress2 += 5;
+                        this.progress3 += 5;
+
+                        this.block1.style.transform = `translateY(${this.progress1}vh)`;
+                        this.block2.style.transform = `translateY(${this.progress2}vh)`;
+                        this.block3.style.transform = `translateY(${this.progress3}vh)`;
+                    } else if(this.progress1 == 20) {
+                        this.progress1 = 24;
+                        this.progress2 = 25;
+                        this.progress3 = 26;
+
+                        this.block1.style.transform = `translateY(24vh)`;
+                        this.block2.style.transform = `translateY(25vh)`;
+                        this.block3.style.transform = `translateY(26vh)`;
+                    } else if(this.progress1 <= 51) {
+                        this.progress1 += 9;
+                        this.progress2 += 10;
+                        this.progress3 += 11;
+
+                        this.block1.style.transform = `translateY(${this.progress1}vh)`;
+                        this.block2.style.transform = `translateY(${this.progress2}vh)`;
+                        this.block3.style.transform = `translateY(${this.progress3}vh)`;
+                    } else {
+                        this.check = true;
+                    }
                 }
             }
-        });
-        function rotateBlock(block, _count) {
-            block.style.transform = `translateY(0vw) rotate(${_count}deg)`;
+            scrollBG(scroll) {
+                if(scroll > 0) {
+                    this.bgPosition -= 50;
+                    this.count++;
+                } else {
+                    this.bgPosition += 50;
+                    this.count--;
+                }
+                this.parent.style.backgroundPositionY = this.bgPosition + "px";
+            }
+            rotateBlock(num, direction) {
+                if(direction == "forward") {
+                    this["progrRotate" + num] += 15;
+                    this["block" + num].style.transform = `translateY(0vh) rotate(${+this["progrRotate" + num]}deg)`;
+                } else {
+                    this["progrRotate" + num] -= 15;
+                    this["block" + num].style.transform = `translateY(0vh) rotate(${+this["progrRotate" + num]}deg)`;
+                }
+            }
         }
+
+        const main = document.getElementById("main");
+        let a = new Blocks(main);
     </script>
 </body>
 </html>
